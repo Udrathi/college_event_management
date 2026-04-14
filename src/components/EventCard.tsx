@@ -1,7 +1,7 @@
 import { Event } from '@/types';
 import { Card, CardContent } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
-import { Calendar, MapPin, Users, Clock } from 'lucide-react';
+import { Calendar, MapPin, Users, Clock, IndianRupee } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 interface EventCardProps {
@@ -11,6 +11,9 @@ interface EventCardProps {
 export function EventCard({ event }: EventCardProps) {
   const isPast = new Date(event.date) < new Date();
   const isFull = event.registrations.length >= event.capacity;
+
+  // ✅ ADDED: check if event is paid
+  const isPaid = event.isPaid && event.price && event.price > 0;
 
   return (
     <Link to={`/events/${event.id}`}>
@@ -26,7 +29,27 @@ export function EventCard({ event }: EventCardProps) {
             {isPast && <Badge variant="secondary">Completed</Badge>}
             {isFull && !isPast && <Badge variant="destructive">Full</Badge>}
           </div>
+
+          {/* ✅ ADDED: Paid badge in top-right corner */}
+          {isPaid && !isPast && (
+            <div className="absolute top-3 right-3">
+              <Badge className="bg-indigo-600 text-white flex items-center gap-1">
+                <IndianRupee className="h-3 w-3" />
+                {event.price}
+              </Badge>
+            </div>
+          )}
+
+          {/* ✅ ADDED: Free badge in top-right for free events */}
+          {!isPaid && !isPast && (
+            <div className="absolute top-3 right-3">
+              <Badge className="bg-green-600 text-white">
+                Free
+              </Badge>
+            </div>
+          )}
         </div>
+
         <CardContent className="p-4 space-y-3">
           <h3 className="font-bold text-lg text-card-foreground line-clamp-1">{event.title}</h3>
           <p className="text-muted-foreground text-sm line-clamp-2">{event.description}</p>
@@ -47,6 +70,25 @@ export function EventCard({ event }: EventCardProps) {
               <Users className="h-3.5 w-3.5 text-accent" />
               <span>{event.registrations.length}/{event.capacity}</span>
             </div>
+          </div>
+
+          {/* ✅ ADDED: Bottom CTA strip */}
+          <div className={`text-xs font-medium text-center py-1.5 rounded-md ${
+            isPast
+              ? 'bg-muted text-muted-foreground'
+              : isFull
+              ? 'bg-red-50 text-red-600'
+              : isPaid
+              ? 'bg-indigo-50 text-indigo-700'
+              : 'bg-green-50 text-green-700'
+          }`}>
+            {isPast
+              ? 'Event Completed'
+              : isFull
+              ? 'No Seats Available'
+              : isPaid
+              ? `Click to Register • ₹${event.price}`
+              : 'Click to Register • Free'}
           </div>
         </CardContent>
       </Card>

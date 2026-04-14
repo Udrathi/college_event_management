@@ -9,6 +9,7 @@ import { QRTicket } from '@/components/QRTicket';
 import { Calendar, Clock, MapPin, Users, ArrowLeft, CalendarPlus } from 'lucide-react';
 import { useToast } from '@/hooks/use-toast';
 import { useState } from 'react';
+import { PayButton } from '@/components/PayButton';
 
 export default function EventDetail() {
   const { id } = useParams<{ id: string }>();
@@ -38,6 +39,10 @@ export default function EventDetail() {
 
   const registration = user ? getRegistrations().find(r => r.userId === user.id && r.eventId === event.id) : null;
 
+  // price and isPaid may not be in your Event type yet, so we read them safely
+  const eventPrice: number = (event as any).price ?? 0;
+  const eventIsPaid: boolean = (event as any).isPaid ?? false;
+
   const handleRegister = () => {
     if (!user) { navigate('/login'); return; }
     const result = registerForEvent(user.id, event.id);
@@ -54,6 +59,15 @@ export default function EventDetail() {
     unregisterFromEvent(user.id, event.id);
     toast({ title: 'Unregistered', description: 'You have been removed from this event.' });
     setRefresh(r => r + 1);
+  };
+
+  const handlePaymentSuccess = () => {
+    // After payment is verified, register the student automatically
+    handleRegister();
+    toast({
+      title: '🎉 Payment Successful!',
+      description: 'You are now registered. Your QR ticket is below.',
+    });
   };
 
   const generateCalendarUrl = () => {
@@ -113,16 +127,39 @@ export default function EventDetail() {
                   {isRegistered ? (
                     <>
                       <Badge className="bg-success text-success-foreground">✓ Registered</Badge>
-                      <Button variant="destructive" className="w-full" onClick={handleUnregister}>Unregister</Button>
+                      <Button variant="destructive" className="w-full" onClick={handleUnregister}>
+                        Unregister
+                      </Button>
                     </>
                   ) : isWaitlisted ? (
                     <>
                       <Badge className="bg-warning text-warning-foreground">On Waitlist</Badge>
-                      <Button variant="destructive" className="w-full" onClick={handleUnregister}>Leave Waitlist</Button>
+                      <Button variant="destructive" className="w-full" onClick={handleUnregister}>
+                        Leave Waitlist
+                      </Button>
+                    </>
+                  ) : isFull ? (
+                    <Button className="w-full" onClick={handleRegister}>
+                      Join Waitlist
+                    </Button>
+                  ) : eventIsPaid && eventPrice > 0 ? (
+                    <>
+                      <div className="flex items-center justify-between px-1">
+                        <span className="text-sm text-muted-foreground">Entry Fee</span>
+                        <span className="text-lg font-bold text-foreground">₹{eventPrice}</span>
+                      </div>
+                      <PayButton
+                        eventId={event.id}
+                        eventTitle={event.title}
+                        price={eventPrice}
+                        studentName={user?.name || 'Student'}
+                        studentEmail={user?.email || 'student@college.edu'}
+                        onSuccess={handlePaymentSuccess}
+                      />
                     </>
                   ) : (
                     <Button className="w-full gradient-accent text-accent-foreground" onClick={handleRegister}>
-                      {isFull ? 'Join Waitlist' : 'Register Now'}
+                      Register Now
                     </Button>
                   )}
                 </CardContent>
@@ -130,7 +167,11 @@ export default function EventDetail() {
             )}
 
             {!isPast && (
-              <Button variant="outline" className="w-full gap-2" onClick={() => window.open(generateCalendarUrl(), '_blank')}>
+              <Button
+                variant="outline"
+                className="w-full gap-2"
+                onClick={() => window.open(generateCalendarUrl(), '_blank')}
+              >
                 <CalendarPlus className="h-4 w-4" /> Add to Calendar
               </Button>
             )}
@@ -139,7 +180,11 @@ export default function EventDetail() {
               <QRTicket registration={registration} event={event} user={user} />
             )}
 
-            {isPast && <Badge variant="secondary" className="w-full justify-center py-2">This event has ended</Badge>}
+            {isPast && (
+              <Badge variant="secondary" className="w-full justify-center py-2">
+                This event has ended
+              </Badge>
+            )}
           </div>
         </div>
       </div>

@@ -13,8 +13,6 @@ const POSTERS = [
   'https://images.unsplash.com/photo-1464047736614-af63643285bf?w=600&h=400&fit=crop',
 ];
 
-const CATEGORIES = ['Technical', 'Cultural', 'Sports', 'Workshop', 'Seminar', 'Hackathon', 'Music', 'Art'];
-
 const VENUES = ['Main Auditorium', 'Seminar Hall A', 'Open Ground', 'Computer Lab', 'Library Hall', 'Sports Complex', 'Conference Room B', 'Amphitheatre'];
 
 function generateId(): string {
@@ -54,82 +52,106 @@ const pastDate = (daysAgo: number) => {
 
 export const mockEvents: Event[] = [
   {
+    
     id: 'evt1', title: 'TechFest 2026', date: futureDate(5), time: '10:00',
     venue: VENUES[0], description: 'Annual technology festival with coding competitions, robotics challenges, and tech talks from industry leaders.',
     capacity: 200, category: 'Technical', poster: POSTERS[0], createdBy: 'admin1',
     registrations: ['stu1', 'stu2', 'stu3', 'stu4', 'stu5'], waitlist: [],
+    isPaid: true, price: 399,
   },
   {
+    
     id: 'evt2', title: 'Cultural Night', date: futureDate(10), time: '18:00',
     venue: VENUES[7], description: 'An evening of dance, music, drama, and poetry celebrating diversity and talent.',
     capacity: 150, category: 'Cultural', poster: POSTERS[1], createdBy: 'admin1',
     registrations: ['stu2', 'stu4', 'stu6', 'stu8'], waitlist: [],
+    isPaid: false, price: 0,
   },
   {
+    
     id: 'evt3', title: 'AI/ML Workshop', date: futureDate(3), time: '09:00',
     venue: VENUES[3], description: 'Hands-on workshop on Machine Learning fundamentals with TensorFlow and PyTorch.',
     capacity: 40, category: 'Workshop', poster: POSTERS[2], createdBy: 'admin2',
     registrations: ['stu1', 'stu3', 'stu5', 'stu7', 'stu9'], waitlist: [],
+    isPaid: true, price: 199,
   },
   {
+    
     id: 'evt4', title: 'Inter-College Cricket', date: futureDate(15), time: '07:00',
     venue: VENUES[5], description: 'Annual inter-college cricket tournament. Teams from 8 colleges compete.',
     capacity: 100, category: 'Sports', poster: POSTERS[3], createdBy: 'admin1',
     registrations: ['stu1', 'stu7', 'stu9'], waitlist: [],
+    isPaid: false, price: 0,
   },
   {
+    
     id: 'evt5', title: 'Startup Summit', date: futureDate(20), time: '11:00',
     venue: VENUES[1], description: 'Hear from successful entrepreneurs, pitch your ideas, and network with investors.',
     capacity: 80, category: 'Seminar', poster: POSTERS[4], createdBy: 'admin2',
     registrations: ['stu2', 'stu4'], waitlist: [],
+    isPaid: true, price: 399,
   },
   {
+    
     id: 'evt6', title: 'Hackathon 24hr', date: futureDate(8), time: '09:00',
     venue: VENUES[3], description: '24-hour coding marathon. Build innovative solutions to real-world problems. Prizes worth ₹50,000!',
     capacity: 60, category: 'Hackathon', poster: POSTERS[5], createdBy: 'admin1',
     registrations: ['stu1', 'stu3', 'stu5', 'stu7'], waitlist: [],
+    isPaid: true, price: 199,
   },
   {
+    
     id: 'evt7', title: 'Music Fest', date: futureDate(25), time: '17:00',
     venue: VENUES[7], description: 'Live bands, solo performances, and a battle of bands competition.',
     capacity: 300, category: 'Music', poster: POSTERS[6], createdBy: 'admin2',
     registrations: ['stu2', 'stu6', 'stu8', 'stu10'], waitlist: [],
+    isPaid: true, price: 299,
   },
   {
+    
     id: 'evt8', title: 'Art Exhibition', date: futureDate(12), time: '10:00',
     venue: VENUES[4], description: 'Student artwork showcase including paintings, sculptures, and digital art.',
     capacity: 50, category: 'Art', poster: POSTERS[7], createdBy: 'admin1',
     registrations: ['stu4', 'stu6'], waitlist: [],
+    isPaid: false, price: 0,
   },
   {
+    
     id: 'evt9', title: 'Web Dev Bootcamp', date: pastDate(5), time: '09:00',
     venue: VENUES[3], description: 'Intensive 2-day bootcamp on full-stack web development with React and Node.js.',
     capacity: 35, category: 'Workshop', poster: POSTERS[8], createdBy: 'admin2',
     registrations: ['stu1', 'stu2', 'stu3', 'stu5', 'stu8', 'stu10'], waitlist: [],
+    isPaid: false, price: 0,
   },
   {
+    
     id: 'evt10', title: 'Annual Sports Day', date: pastDate(10), time: '07:00',
     venue: VENUES[5], description: 'Track & field events, team sports, and athletic competitions.',
     capacity: 250, category: 'Sports', poster: POSTERS[9], createdBy: 'admin1',
     registrations: ['stu1', 'stu3', 'stu4', 'stu7', 'stu9', 'stu10'], waitlist: [],
+    isPaid: false, price: 0,
   },
   {
+    
     id: 'evt11', title: 'Cybersecurity Seminar', date: futureDate(30), time: '14:00',
     venue: VENUES[6], description: 'Learn about ethical hacking, network security, and cyber threat prevention.',
     capacity: 45, category: 'Seminar', poster: POSTERS[0], createdBy: 'admin2',
     registrations: ['stu5', 'stu9'], waitlist: [],
+    isPaid: false, price: 0,
   },
   {
+    
     id: 'evt12', title: 'Dance Competition', date: futureDate(18), time: '16:00',
     venue: VENUES[0], description: 'Solo and group dance competition across classical, contemporary, and freestyle categories.',
     capacity: 120, category: 'Cultural', poster: POSTERS[1], createdBy: 'admin1',
     registrations: ['stu2', 'stu4', 'stu6', 'stu8', 'stu10'], waitlist: [],
+    isPaid: true, price: 149,
   },
 ];
 
 export const mockRegistrations: Registration[] = [];
 
-// Generate registrations from mock events
+
 mockEvents.forEach(event => {
   event.registrations.forEach(userId => {
     mockRegistrations.push({

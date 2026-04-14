@@ -22,6 +22,8 @@ export interface Event {
   createdBy: string;
   registrations: string[]; // user IDs
   waitlist: string[];
+  price?: number;
+  isPaid?: boolean;
 }
 
 export interface Registration {
